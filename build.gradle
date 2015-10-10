@@ -1,0 +1,55 @@
+
+
+buildscript {
+    ext {
+        kotlin_version = '0.14.451'
+    }
+
+    repositories {
+        mavenCentral()
+
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '1.2.2'
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'application'
+
+version '1.0-SNAPSHOT'
+mainClassName = 'com.examples.helloworld.HelloworldPackage'
+sourceCompatibility = 1.8
+
+// Set our project variables
+project.ext {
+    dropwizard_version = '0.9.0-rc4'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile (
+            "io.dropwizard:dropwizard-core:$dropwizard_version",
+            "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    )
+}
+
+// Configure the shadow jar task
+shadowJar {
+    mergeServiceFiles()
+    exclude 'META-INF/*.DSA'
+    exclude 'META-INF/*.RSA'
+}
+jar {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+}
